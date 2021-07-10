@@ -2,6 +2,8 @@ package com.naufalfachrian.itunessearch.utility.wrapper.mediaplayer
 
 import android.media.AudioAttributes
 import android.media.MediaPlayer
+import android.os.Handler
+import android.os.Looper
 import com.naufalfachrian.itunessearch.entity.Music
 
 class MediaPlayerWrapperImpl : MediaPlayerWrapper {
@@ -33,6 +35,7 @@ class MediaPlayerWrapperImpl : MediaPlayerWrapper {
             mediaPlayer.prepareAsync()
             mediaPlayer.start()
             callback.mediaPlayerStarted(music)
+            updateDurationInformation()
         } catch (reason: Throwable) {
             callback.mediaPlayerFailed(reason)
         }
@@ -62,6 +65,19 @@ class MediaPlayerWrapperImpl : MediaPlayerWrapper {
         } else {
             mediaPlayer.start()
         }
+    }
+
+    private fun updateDurationInformation() {
+        val handler = Handler(Looper.getMainLooper())
+        val runnable = object : Runnable {
+            override fun run() {
+                val timePassed = mediaPlayer.currentPosition
+                val duration = mediaPlayer.duration
+                callback.updateDurationInformation(timePassed, duration)
+                handler.postDelayed(this, 100)
+            }
+        }
+        handler.postDelayed(runnable, 100)
     }
 
 }

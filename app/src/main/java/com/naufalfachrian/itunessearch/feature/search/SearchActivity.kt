@@ -104,4 +104,11 @@ class SearchActivity : AppCompatActivity(), MusicAdapter.Callback, MediaPlayerWr
         playerSheetController.state = BottomSheetBehavior.STATE_HIDDEN
     }
 
+    override fun updateDurationInformation(timePassed: Int, duration: Int) {
+        binding.playerSheet.durationBar.apply {
+            max = duration
+            progress = timePassed
+        }
+    }
+
 }

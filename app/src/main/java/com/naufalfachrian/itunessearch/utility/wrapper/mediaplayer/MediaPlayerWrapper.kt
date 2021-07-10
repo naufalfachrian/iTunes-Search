@@ -14,6 +14,8 @@ interface MediaPlayerWrapper {
 
         fun mediaPlayerFailed(reason: Throwable)
 
+        fun updateDurationInformation(timePassed: Int, duration: Int)
+
     }
 
     fun setup(callback: Callback)
