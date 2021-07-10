@@ -7,9 +7,13 @@ import com.naufalfachrian.itunessearch.databinding.MusicViewHolderBinding
 import com.naufalfachrian.itunessearch.entity.Music
 import com.naufalfachrian.itunessearch.utility.extension.setImageFromUrlString
 
-class MusicAdapter(private val items: List<Music>) : RecyclerView.Adapter<MusicAdapter.ViewHolder>() {
+class MusicAdapter(private val items: List<Music>, private val callback: Callback) : RecyclerView.Adapter<MusicAdapter.ViewHolder>() {
 
     class ViewHolder(val binding: MusicViewHolderBinding) : RecyclerView.ViewHolder(binding.root)
+
+    interface Callback {
+        fun onItemMusicClickListener(music: Music)
+    }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val binding = MusicViewHolderBinding.inflate(LayoutInflater.from(parent.context), parent, false)
@@ -17,8 +21,10 @@ class MusicAdapter(private val items: List<Music>) : RecyclerView.Adapter<MusicA
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        holder.binding.music = items[position]
-        holder.binding.musicAlbumArtView.setImageFromUrlString(items[position].albumArtUrl)
+        val music = items[position]
+        holder.binding.music = music
+        holder.binding.musicAlbumArtView.setImageFromUrlString(music.albumArtUrl)
+        holder.binding.root.setOnClickListener { callback.onItemMusicClickListener(music) }
     }
 
     override fun getItemCount(): Int {

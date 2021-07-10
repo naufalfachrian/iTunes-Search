@@ -1,5 +1,7 @@
 package com.naufalfachrian.itunessearch.feature.search
 
+import android.media.AudioAttributes
+import android.media.MediaPlayer
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.widget.Toast
@@ -10,9 +12,11 @@ import com.naufalfachrian.itunessearch.adapter.MusicAdapter
 import com.naufalfachrian.itunessearch.databinding.SearchActivityBinding
 import com.naufalfachrian.itunessearch.entity.Music
 
-class SearchActivity : AppCompatActivity() {
+class SearchActivity : AppCompatActivity(), MusicAdapter.Callback {
 
     private lateinit var binding: SearchActivityBinding
+
+    private lateinit var mediaPlayer: MediaPlayer
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -23,6 +27,18 @@ class SearchActivity : AppCompatActivity() {
         binding.viewModel?.musics?.observe(this, this::musicsValueChanged)
         binding.viewModel?.errorMessage?.observe(this, this::errorMessageValueChanged)
         setContentView(binding.root)
+        setupMediaPlayer()
+    }
+
+    private fun setupMediaPlayer() {
+        mediaPlayer = MediaPlayer().apply {
+            setAudioAttributes(
+                AudioAttributes.Builder()
+                    .setContentType(AudioAttributes.CONTENT_TYPE_MUSIC)
+                    .build()
+            )
+            setOnPreparedListener { toggleMediaPlayer() }
+        }
     }
 
     private fun queryValueChanged(query: String) {
@@ -39,13 +55,35 @@ class SearchActivity : AppCompatActivity() {
 
     private fun displayMusicList(musics: List<Music>) {
         binding.musicListView.apply {
-            adapter = MusicAdapter(musics)
+            adapter = MusicAdapter(musics, this@SearchActivity)
             layoutManager = LinearLayoutManager(context)
         }
     }
 
     private fun displayErrorMessage(errorMessage: String) {
         Toast.makeText(this, errorMessage, Toast.LENGTH_SHORT).show()
+    }
+
+    override fun onItemMusicClickListener(music: Music) {
+        playMusic(music)
+    }
+
+    private fun playMusic(music: Music) {
+        if (mediaPlayer.isPlaying) {
+            mediaPlayer.stop()
+        }
+        mediaPlayer.reset()
+        mediaPlayer.setDataSource(music.previewPlaybackUrl)
+        mediaPlayer.prepareAsync()
+        mediaPlayer.start()
+    }
+
+    private fun toggleMediaPlayer() {
+        if (mediaPlayer.isPlaying) {
+            mediaPlayer.pause()
+        } else {
+            mediaPlayer.start()
+        }
     }
 
 }
