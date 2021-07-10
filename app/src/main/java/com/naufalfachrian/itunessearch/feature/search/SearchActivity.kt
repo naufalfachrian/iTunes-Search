@@ -6,6 +6,7 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.lifecycle.ViewModelProvider
+import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.naufalfachrian.itunessearch.R
@@ -75,6 +76,7 @@ class SearchActivity : AppCompatActivity(), MusicAdapter.Callback, MediaPlayerWr
         binding.musicListView.apply {
             adapter = MusicAdapter(musics, this@SearchActivity)
             layoutManager = LinearLayoutManager(context)
+            addItemDecoration(DividerItemDecoration(context, LinearLayoutManager.VERTICAL))
         }
     }
 
