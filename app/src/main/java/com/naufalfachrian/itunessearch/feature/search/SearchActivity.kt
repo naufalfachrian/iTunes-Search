@@ -2,10 +2,13 @@ package com.naufalfachrian.itunessearch.feature.search
 
 import android.os.Bundle
 import android.view.LayoutInflater
+import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.naufalfachrian.itunessearch.adapter.MusicAdapter
 import com.naufalfachrian.itunessearch.databinding.SearchActivityBinding
 import com.naufalfachrian.itunessearch.entity.Music
@@ -18,6 +21,8 @@ class SearchActivity : AppCompatActivity(), MusicAdapter.Callback, MediaPlayerWr
 
     private lateinit var mediaPlayer: MediaPlayerWrapper
 
+    private lateinit var playerSheetController: BottomSheetBehavior<ConstraintLayout>
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = SearchActivityBinding.inflate(LayoutInflater.from(this))
@@ -28,11 +33,23 @@ class SearchActivity : AppCompatActivity(), MusicAdapter.Callback, MediaPlayerWr
         binding.viewModel?.errorMessage?.observe(this, this::errorMessageValueChanged)
         setContentView(binding.root)
         setupMediaPlayer()
+        setupPlayerSheet()
+    }
+
+    override fun onDestroy() {
+        mediaPlayer.close()
+        super.onDestroy()
     }
 
     private fun setupMediaPlayer() {
         mediaPlayer = MediaPlayerWrapperImpl().apply {
             setup(this@SearchActivity)
+        }
+    }
+
+    private fun setupPlayerSheet() {
+        playerSheetController = BottomSheetBehavior.from(binding.playerSheet.root as ConstraintLayout).apply {
+            isDraggable = false
         }
     }
 
@@ -65,6 +82,24 @@ class SearchActivity : AppCompatActivity(), MusicAdapter.Callback, MediaPlayerWr
 
     private fun playMusic(music: Music) {
         mediaPlayer.play(music)
+    }
+
+    override fun mediaPlayerStarted(music: Music) {
+        binding.playerSheet.music = music
+        playerSheetController.state = BottomSheetBehavior.STATE_EXPANDED
+    }
+
+    override fun mediaPlayerPaused() {
+        playerSheetController.state = BottomSheetBehavior.STATE_COLLAPSED
+    }
+
+    override fun mediaPlayerFailed(reason: Throwable) {
+        playerSheetController.state = BottomSheetBehavior.STATE_HIDDEN
+        Toast.makeText(this, reason.localizedMessage, Toast.LENGTH_SHORT).show()
+    }
+
+    override fun mediaPlayerStopped() {
+        playerSheetController.state = BottomSheetBehavior.STATE_HIDDEN
     }
 
 }

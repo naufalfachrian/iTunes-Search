@@ -8,7 +8,10 @@ class MediaPlayerWrapperImpl : MediaPlayerWrapper {
 
     private val mediaPlayer = MediaPlayer()
 
+    private lateinit var callback: MediaPlayerWrapper.Callback
+
     override fun setup(callback: MediaPlayerWrapper.Callback) {
+        this.callback = callback
         mediaPlayer.apply {
             setAudioAttributes(
                 AudioAttributes.Builder()
@@ -22,24 +25,33 @@ class MediaPlayerWrapperImpl : MediaPlayerWrapper {
     override fun play(music: Music) {
         if (mediaPlayer.isPlaying) {
             mediaPlayer.stop()
+            callback.mediaPlayerStopped()
         }
-        mediaPlayer.reset()
-        mediaPlayer.setDataSource(music.previewPlaybackUrl)
-        mediaPlayer.prepareAsync()
-        mediaPlayer.start()
+        try {
+            mediaPlayer.reset()
+            mediaPlayer.setDataSource(music.previewPlaybackUrl)
+            mediaPlayer.prepareAsync()
+            mediaPlayer.start()
+            callback.mediaPlayerStarted(music)
+        } catch (reason: Throwable) {
+            callback.mediaPlayerFailed(reason)
+        }
     }
 
     override fun pause() {
         mediaPlayer.pause()
+        callback.mediaPlayerPaused()
     }
 
     override fun stop() {
         mediaPlayer.stop()
+        callback.mediaPlayerStopped()
     }
 
     override fun close() {
         if (mediaPlayer.isPlaying) {
             mediaPlayer.stop()
+            callback.mediaPlayerStopped()
         }
         mediaPlayer.release()
     }

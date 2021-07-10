@@ -5,6 +5,15 @@ import com.naufalfachrian.itunessearch.entity.Music
 interface MediaPlayerWrapper {
 
     interface Callback {
+
+        fun mediaPlayerStarted(music: Music)
+
+        fun mediaPlayerPaused()
+
+        fun mediaPlayerStopped()
+
+        fun mediaPlayerFailed(reason: Throwable)
+
     }
 
     fun setup(callback: Callback)
