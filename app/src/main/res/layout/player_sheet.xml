@@ -36,7 +36,7 @@
                 android:layout_margin="8dp">
 
                 <ImageView
-                    android:id="@+id/imageView"
+                    android:id="@+id/player_album_art_view"
                     android:layout_width="64dp"
                     android:layout_height="0dp"
                     android:layout_marginStart="8dp"
@@ -59,7 +59,7 @@
                     android:textSize="14sp"
                     app:layout_constraintBottom_toTopOf="@+id/seekBar"
                     app:layout_constraintEnd_toStartOf="@+id/imageButton3"
-                    app:layout_constraintStart_toEndOf="@+id/imageView"
+                    app:layout_constraintStart_toEndOf="@+id/player_album_art_view"
                     app:layout_constraintTop_toTopOf="parent" />
 
                 <ImageButton
@@ -90,7 +90,7 @@
                     app:layout_constraintTop_toTopOf="parent"
                     app:srcCompat="@drawable/ic_baseline_skip_previous_24" />
 
-                <SeekBar
+                <com.naufalfachrian.itunessearch.utility.view.UnmovableSeekBar
                     android:id="@+id/seekBar"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
@@ -100,7 +100,7 @@
                     android:layout_marginBottom="8dp"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toEndOf="@+id/imageView"
+                    app:layout_constraintStart_toEndOf="@+id/player_album_art_view"
                     app:layout_constraintTop_toBottomOf="@+id/imageButton3" />
 
             </androidx.constraintlayout.widget.ConstraintLayout>

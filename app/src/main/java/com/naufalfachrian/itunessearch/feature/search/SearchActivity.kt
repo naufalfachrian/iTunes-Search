@@ -12,6 +12,7 @@ import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.naufalfachrian.itunessearch.adapter.MusicAdapter
 import com.naufalfachrian.itunessearch.databinding.SearchActivityBinding
 import com.naufalfachrian.itunessearch.entity.Music
+import com.naufalfachrian.itunessearch.utility.extension.setImageFromUrlString
 import com.naufalfachrian.itunessearch.utility.wrapper.mediaplayer.MediaPlayerWrapper
 import com.naufalfachrian.itunessearch.utility.wrapper.mediaplayer.MediaPlayerWrapperImpl
 
@@ -86,6 +87,7 @@ class SearchActivity : AppCompatActivity(), MusicAdapter.Callback, MediaPlayerWr
 
     override fun mediaPlayerStarted(music: Music) {
         binding.playerSheet.music = music
+        binding.playerSheet.playerAlbumArtView.setImageFromUrlString(music.albumArtUrl)
         playerSheetController.state = BottomSheetBehavior.STATE_EXPANDED
     }
 
