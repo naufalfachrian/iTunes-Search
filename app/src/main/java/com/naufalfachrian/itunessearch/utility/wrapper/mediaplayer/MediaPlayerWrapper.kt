@@ -6,7 +6,9 @@ interface MediaPlayerWrapper {
 
     interface Callback {
 
-        fun mediaPlayerStarted(music: Music)
+        fun updatePlaybackInformation(music: Music)
+
+        fun mediaPlayerStarted()
 
         fun mediaPlayerPaused()
 
@@ -22,9 +24,13 @@ interface MediaPlayerWrapper {
 
     fun play(music: Music)
 
+    fun start()
+
     fun pause()
 
     fun stop()
+
+    fun togglePlayback()
 
     fun close()
 

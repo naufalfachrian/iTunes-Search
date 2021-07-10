@@ -35,6 +35,7 @@ class SearchActivity : AppCompatActivity(), MusicAdapter.Callback, MediaPlayerWr
         setContentView(binding.root)
         setupMediaPlayer()
         setupPlayerSheet()
+        setupPlaybackButton()
     }
 
     override fun onDestroy() {
@@ -52,6 +53,10 @@ class SearchActivity : AppCompatActivity(), MusicAdapter.Callback, MediaPlayerWr
         playerSheetController = BottomSheetBehavior.from(binding.playerSheet.root as ConstraintLayout).apply {
             isDraggable = false
         }
+    }
+
+    private fun setupPlaybackButton() {
+        binding.playerSheet.playPauseButton.setOnClickListener { mediaPlayer.togglePlayback() }
     }
 
     private fun queryValueChanged(query: String) {
@@ -85,15 +90,18 @@ class SearchActivity : AppCompatActivity(), MusicAdapter.Callback, MediaPlayerWr
         mediaPlayer.play(music)
     }
 
-    override fun mediaPlayerStarted(music: Music) {
+    override fun updatePlaybackInformation(music: Music) {
         binding.playerSheet.music = music
         binding.playerSheet.playerAlbumArtView.setImageFromUrlString(music.albumArtUrl)
+    }
+
+    override fun mediaPlayerStarted() {
         playerSheetController.state = BottomSheetBehavior.STATE_EXPANDED
         binding.playerSheet.playPauseButton.setImageResource(R.drawable.ic_baseline_pause_24)
     }
 
     override fun mediaPlayerPaused() {
-        playerSheetController.state = BottomSheetBehavior.STATE_COLLAPSED
+        playerSheetController.state = BottomSheetBehavior.STATE_EXPANDED
         binding.playerSheet.playPauseButton.setImageResource(R.drawable.ic_baseline_play_arrow_24)
     }
 

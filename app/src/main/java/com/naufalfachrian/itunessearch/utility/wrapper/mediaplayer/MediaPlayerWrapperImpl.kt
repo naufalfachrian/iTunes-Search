@@ -25,21 +25,26 @@ class MediaPlayerWrapperImpl : MediaPlayerWrapper {
 
     override fun play(music: Music) {
         if (mediaPlayer.isPlaying) {
-            mediaPlayer.stop()
-            callback.mediaPlayerStopped()
+            stop()
         }
         try {
             mediaPlayer.apply {
-                setOnPreparedListener { mediaPlayerPrepared(music) }
+                setOnPreparedListener { mediaPlayerPrepared() }
                 setOnCompletionListener { callback.mediaPlayerStopped() }
                 reset()
                 setDataSource(music.previewPlaybackUrl)
                 prepareAsync()
             }
+            callback.updatePlaybackInformation(music)
             updateDurationInformation()
         } catch (reason: Throwable) {
             callback.mediaPlayerFailed(reason)
         }
+    }
+
+    override fun start() {
+        mediaPlayer.start()
+        callback.mediaPlayerStarted()
     }
 
     override fun pause() {
@@ -52,35 +57,37 @@ class MediaPlayerWrapperImpl : MediaPlayerWrapper {
         callback.mediaPlayerStopped()
     }
 
+    override fun togglePlayback() {
+        if (mediaPlayer.isPlaying) {
+            pause()
+        } else {
+            start()
+        }
+    }
+
     override fun close() {
         if (mediaPlayer.isPlaying) {
-            mediaPlayer.stop()
-            callback.mediaPlayerStopped()
+            stop()
         }
         mediaPlayer.release()
     }
 
-    private fun mediaPlayerPrepared(music: Music) {
-        if (mediaPlayer.isPlaying) {
-            mediaPlayer.pause()
-            callback.mediaPlayerPaused()
-        } else {
-            mediaPlayer.start()
-            callback.mediaPlayerStarted(music)
-        }
+    private fun mediaPlayerPrepared() {
+        togglePlayback()
     }
 
     private fun updateDurationInformation() {
         val handler = Handler(Looper.getMainLooper())
+        val delayUpdateDurationInformation = 100L // in millis
         val runnable = object : Runnable {
             override fun run() {
                 val timePassed = mediaPlayer.currentPosition
                 val duration = mediaPlayer.duration
                 callback.updateDurationInformation(timePassed, duration)
-                handler.postDelayed(this, 100)
+                handler.postDelayed(this, delayUpdateDurationInformation)
             }
         }
-        handler.postDelayed(runnable, 100)
+        handler.postDelayed(runnable, delayUpdateDurationInformation)
     }
 
 }
