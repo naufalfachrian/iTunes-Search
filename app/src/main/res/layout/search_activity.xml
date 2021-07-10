@@ -6,7 +6,7 @@
     <data>
         <variable
             name="viewModel"
-            type="com.naufalfachrian.itunessearch.SearchViewModel" />
+            type="com.naufalfachrian.itunessearch.feature.search.SearchViewModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -33,6 +33,7 @@
         </com.google.android.material.textfield.TextInputLayout>
 
         <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/music_list_view"
             android:layout_width="0dp"
             android:layout_height="0dp"
             android:layout_marginTop="12dp"

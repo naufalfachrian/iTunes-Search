@@ -2,6 +2,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.naufalfachrian.itunessearch">
 
+    <uses-permission android:name="android.permission.INTERNET"/>
+
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
@@ -11,7 +13,7 @@
         android:theme="@style/Theme.ITunesSearch.NoTitle">
 
         <activity
-            android:name=".SearchActivity"
+            android:name=".feature.search.SearchActivity"
             android:label="iTunes Search">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
