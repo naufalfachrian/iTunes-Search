@@ -37,6 +37,7 @@ class SearchActivity : AppCompatActivity(), MusicAdapter.Callback, MediaPlayerWr
         setupMediaPlayer()
         setupPlayerSheet()
         setupPlaybackButton()
+        setupMusicRecyclerView()
     }
 
     override fun onDestroy() {
@@ -72,11 +73,16 @@ class SearchActivity : AppCompatActivity(), MusicAdapter.Callback, MediaPlayerWr
         displayErrorMessage(errorMessage)
     }
 
-    private fun displayMusicList(musics: List<Music>) {
-        binding.musicListView.apply {
-            adapter = MusicAdapter(musics, this@SearchActivity)
+    private fun setupMusicRecyclerView() {
+        binding.musicRecyclerView.apply {
             layoutManager = LinearLayoutManager(context)
             addItemDecoration(DividerItemDecoration(context, LinearLayoutManager.VERTICAL))
+        }
+    }
+
+    private fun displayMusicList(musics: List<Music>) {
+        binding.musicRecyclerView.apply {
+            adapter = MusicAdapter(musics, this@SearchActivity)
         }
     }
 
