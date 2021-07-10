@@ -2,13 +2,13 @@ package com.naufalfachrian.itunessearch.feature.search
 
 import android.os.Bundle
 import android.view.LayoutInflater
-import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.bottomsheet.BottomSheetBehavior
+import com.naufalfachrian.itunessearch.R
 import com.naufalfachrian.itunessearch.adapter.MusicAdapter
 import com.naufalfachrian.itunessearch.databinding.SearchActivityBinding
 import com.naufalfachrian.itunessearch.entity.Music
@@ -89,10 +89,12 @@ class SearchActivity : AppCompatActivity(), MusicAdapter.Callback, MediaPlayerWr
         binding.playerSheet.music = music
         binding.playerSheet.playerAlbumArtView.setImageFromUrlString(music.albumArtUrl)
         playerSheetController.state = BottomSheetBehavior.STATE_EXPANDED
+        binding.playerSheet.playPauseButton.setImageResource(R.drawable.ic_baseline_pause_24)
     }
 
     override fun mediaPlayerPaused() {
         playerSheetController.state = BottomSheetBehavior.STATE_COLLAPSED
+        binding.playerSheet.playPauseButton.setImageResource(R.drawable.ic_baseline_play_arrow_24)
     }
 
     override fun mediaPlayerFailed(reason: Throwable) {
@@ -102,6 +104,7 @@ class SearchActivity : AppCompatActivity(), MusicAdapter.Callback, MediaPlayerWr
 
     override fun mediaPlayerStopped() {
         playerSheetController.state = BottomSheetBehavior.STATE_HIDDEN
+        binding.playerSheet.playPauseButton.setImageResource(R.drawable.ic_baseline_play_arrow_24)
     }
 
     override fun updateDurationInformation(timePassed: Int, duration: Int) {

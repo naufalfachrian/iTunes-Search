@@ -20,7 +20,6 @@ class MediaPlayerWrapperImpl : MediaPlayerWrapper {
                     .setContentType(AudioAttributes.CONTENT_TYPE_MUSIC)
                     .build()
             )
-            setOnPreparedListener { mediaPlayerPrepared() }
         }
     }
 
@@ -30,11 +29,13 @@ class MediaPlayerWrapperImpl : MediaPlayerWrapper {
             callback.mediaPlayerStopped()
         }
         try {
-            mediaPlayer.reset()
-            mediaPlayer.setDataSource(music.previewPlaybackUrl)
-            mediaPlayer.prepareAsync()
-            mediaPlayer.start()
-            callback.mediaPlayerStarted(music)
+            mediaPlayer.apply {
+                setOnPreparedListener { mediaPlayerPrepared(music) }
+                setOnCompletionListener { callback.mediaPlayerStopped() }
+                reset()
+                setDataSource(music.previewPlaybackUrl)
+                prepareAsync()
+            }
             updateDurationInformation()
         } catch (reason: Throwable) {
             callback.mediaPlayerFailed(reason)
@@ -59,11 +60,13 @@ class MediaPlayerWrapperImpl : MediaPlayerWrapper {
         mediaPlayer.release()
     }
 
-    private fun mediaPlayerPrepared() {
+    private fun mediaPlayerPrepared(music: Music) {
         if (mediaPlayer.isPlaying) {
             mediaPlayer.pause()
+            callback.mediaPlayerPaused()
         } else {
             mediaPlayer.start()
+            callback.mediaPlayerStarted(music)
         }
     }
 
