@@ -1,7 +1,5 @@
 package com.naufalfachrian.itunessearch.feature.search
 
-import android.media.AudioAttributes
-import android.media.MediaPlayer
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.widget.Toast
@@ -11,12 +9,14 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.naufalfachrian.itunessearch.adapter.MusicAdapter
 import com.naufalfachrian.itunessearch.databinding.SearchActivityBinding
 import com.naufalfachrian.itunessearch.entity.Music
+import com.naufalfachrian.itunessearch.utility.wrapper.mediaplayer.MediaPlayerWrapper
+import com.naufalfachrian.itunessearch.utility.wrapper.mediaplayer.MediaPlayerWrapperImpl
 
-class SearchActivity : AppCompatActivity(), MusicAdapter.Callback {
+class SearchActivity : AppCompatActivity(), MusicAdapter.Callback, MediaPlayerWrapper.Callback {
 
     private lateinit var binding: SearchActivityBinding
 
-    private lateinit var mediaPlayer: MediaPlayer
+    private lateinit var mediaPlayer: MediaPlayerWrapper
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -31,13 +31,8 @@ class SearchActivity : AppCompatActivity(), MusicAdapter.Callback {
     }
 
     private fun setupMediaPlayer() {
-        mediaPlayer = MediaPlayer().apply {
-            setAudioAttributes(
-                AudioAttributes.Builder()
-                    .setContentType(AudioAttributes.CONTENT_TYPE_MUSIC)
-                    .build()
-            )
-            setOnPreparedListener { toggleMediaPlayer() }
+        mediaPlayer = MediaPlayerWrapperImpl().apply {
+            setup(this@SearchActivity)
         }
     }
 
@@ -69,21 +64,7 @@ class SearchActivity : AppCompatActivity(), MusicAdapter.Callback {
     }
 
     private fun playMusic(music: Music) {
-        if (mediaPlayer.isPlaying) {
-            mediaPlayer.stop()
-        }
-        mediaPlayer.reset()
-        mediaPlayer.setDataSource(music.previewPlaybackUrl)
-        mediaPlayer.prepareAsync()
-        mediaPlayer.start()
-    }
-
-    private fun toggleMediaPlayer() {
-        if (mediaPlayer.isPlaying) {
-            mediaPlayer.pause()
-        } else {
-            mediaPlayer.start()
-        }
+        mediaPlayer.play(music)
     }
 
 }
