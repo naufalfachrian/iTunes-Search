@@ -5,6 +5,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.naufalfachrian.itunessearch.databinding.MusicViewHolderBinding
 import com.naufalfachrian.itunessearch.entity.Music
+import com.naufalfachrian.itunessearch.utility.extension.setImageFromUrlString
 
 class MusicAdapter(private val items: List<Music>) : RecyclerView.Adapter<MusicAdapter.ViewHolder>() {
 
@@ -17,6 +18,7 @@ class MusicAdapter(private val items: List<Music>) : RecyclerView.Adapter<MusicA
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         holder.binding.music = items[position]
+        holder.binding.musicAlbumArtView.setImageFromUrlString(items[position].albumArtUrl)
     }
 
     override fun getItemCount(): Int {
