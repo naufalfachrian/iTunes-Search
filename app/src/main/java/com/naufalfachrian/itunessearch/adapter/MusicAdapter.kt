@@ -53,7 +53,7 @@ class MusicAdapter(private val items: List<Music>, private val callback: Callbac
         return items.count()
     }
 
-    fun clearPlayingMusicIndicator() {
+    private fun clearPlayingMusicIndicator() {
         val refreshPosition = lastPlayedMusicPosition
         lastPlayedMusicPosition = null
         if (refreshPosition != null) {
